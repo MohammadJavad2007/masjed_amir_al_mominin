@@ -1,125 +1,322 @@
+import 'package:black_hole_flutter/black_hole_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:swipeable_page_route/swipeable_page_route.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
+    return GetMaterialApp(
+      title: '🔙 swipeable_page_route example',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a blue toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: FirstPage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+class FirstPage extends StatelessWidget {
+  const FirstPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text('hello'),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
+        child: ElevatedButton(
+            onPressed: () {
+              showGeneralDialog(
+                barrierLabel: "Label",
+                barrierDismissible: false,
+                barrierColor: const Color.fromARGB(0, 255, 255, 255),
+                transitionDuration: Duration(milliseconds: 400),
+                context: context,
+                pageBuilder: (context, anim1, anim2) {
+                  return Screen();
+                },
+                transitionBuilder: (context, anim1, anim2, child) {
+                  return SlideTransition(
+                    position: Tween(begin: Offset(1, 0), end: Offset(0, 0))
+                        .animate(anim1),
+                    child: child,
+                  );
+                },
+              );
+            },
+            child: Text('GO')),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
+
+class Screen extends StatelessWidget {
+  const Screen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Dismissible(
+      onDismissed: (context) {
+        Get.back();
+      },
+      direction: DismissDirection.startToEnd,
+      key: Key('hello5'),
+      child: Material(
+        elevation: 20 ,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('Dismissible'),
+          ),
+          body: Center(child: Text('Hi')),
+        ),
+      ),
+    );
+  }
+}
+
+// class FirstPage extends StatefulWidget {
+//   @override
+//   State<FirstPage> createState() => _FirstPageState();
+// }
+
+// class _FirstPageState extends State<FirstPage> {
+//   @override
+//   Widget build(BuildContext context) {
+//     // final pageRoute = context.getSwipeablePageRoute<void>()!;
+//      return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Page 2'),
+//         actions: [
+//           IconButton(
+//             key: const ValueKey('check'),
+//             icon: const Icon(Icons.check),
+//             onPressed: () {},
+//           ),
+//           IconButton(
+//             key: const ValueKey('star'),
+//             icon: const Icon(Icons.star),
+//             onPressed: () {},
+//           ),
+//           IconButton(
+//             key: const ValueKey('play_arrow'),
+//             icon: const Icon(Icons.play_arrow),
+//             onPressed: () {},
+//           ),
+//           PopupMenuButton<void>(
+//             itemBuilder: (context) => [
+//               const PopupMenuItem(child: Text('One')),
+//               const PopupMenuItem(child: Text('Two')),
+//             ],
+//           ),
+//         ],
+//       ),
+//       body: SizedBox.expand(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             // Text('Can swipe: ${pageRoute.canSwipe}'),
+//             TextButton(
+//               onPressed: () {
+//                 // You can disable swiping completely using `canSwipe`:
+//                 setState(() {});
+//               },
+//               child: const Text('Toggle'),
+//             ),
+//             // Text('Can only swipe from edge: ${pageRoute.canOnlySwipeFromEdge}'),
+//             TextButton(
+//               onPressed: () => setState(
+//                 () => {}
+//               ),
+//               child: const Text('Toggle'),
+//             ),
+//             const SizedBox(height: 32),
+//             ElevatedButton(
+//               onPressed: () {
+//                 context.navigator.push<void>(SwipeablePageRoute(
+//                   // You can customize the width of the detection area with
+//                   // `backGestureDetectionWidth`.
+//                   // transitionBuilder: (context, animation, secondaryAnimation, isSwipeGesture, child) {
+//                   //   return ScaleTransition(scale: animation,);
+//                   // },
+//                   builder: (_) => SecondPage(),
+//                 ));
+//               },
+//               child: const Text('Open page 3'),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+// class SecondPage extends StatefulWidget {
+//   @override
+//   State<SecondPage> createState() => _SecondPageState();
+// }
+
+// class _SecondPageState extends State<SecondPage> {
+//   @override
+//   Widget build(BuildContext context) {
+//     // Gets the `SwipeablePageRoute` wrapping the current page.
+//     final pageRoute = context.getSwipeablePageRoute<void>()!;
+
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Page 2'),
+//         actions: [
+//           IconButton(
+//             key: const ValueKey('check'),
+//             icon: const Icon(Icons.check),
+//             onPressed: () {},
+//           ),
+//           IconButton(
+//             key: const ValueKey('star'),
+//             icon: const Icon(Icons.star),
+//             onPressed: () {},
+//           ),
+//           IconButton(
+//             key: const ValueKey('play_arrow'),
+//             icon: const Icon(Icons.play_arrow),
+//             onPressed: () {},
+//           ),
+//           PopupMenuButton<void>(
+//             itemBuilder: (context) => [
+//               const PopupMenuItem(child: Text('One')),
+//               const PopupMenuItem(child: Text('Two')),
+//             ],
+//           ),
+//         ],
+//       ),
+//       body: SizedBox.expand(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             Text('Can swipe: ${pageRoute.canSwipe}'),
+//             TextButton(
+//               onPressed: () {
+//                 // You can disable swiping completely using `canSwipe`:
+//                 setState(() => pageRoute.canSwipe = !pageRoute.canSwipe);
+//               },
+//               child: const Text('Toggle'),
+//             ),
+//             Text('Can only swipe from edge: ${pageRoute.canOnlySwipeFromEdge}'),
+//             TextButton(
+//               onPressed: () => setState(
+//                 () => pageRoute.canOnlySwipeFromEdge =
+//                     !pageRoute.canOnlySwipeFromEdge,
+//               ),
+//               child: const Text('Toggle'),
+//             ),
+//             const SizedBox(height: 32),
+//             ElevatedButton(
+//               onPressed: () {
+//                 context.navigator.push<void>(SwipeablePageRoute(
+//                   // You can customize the width of the detection area with
+//                   // `backGestureDetectionWidth`.
+//                   builder: (_) => ThirdPage(),
+//                 ));
+//               },
+//               child: const Text('Open page 3'),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+// class ThirdPage extends StatefulWidget {
+//   @override
+//   State<ThirdPage> createState() => _ThirdPageState();
+// }
+
+// class _ThirdPageState extends State<ThirdPage>
+//     with SingleTickerProviderStateMixin {
+//   static const _tabCount = 3;
+//   late final TabController _tabController;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     _tabController = TabController(length: _tabCount, vsync: this);
+//     _tabController.addListener(() {
+//       if (!mounted) return;
+
+//       final canSwipe = _tabController.index == 0;
+//       context.getSwipeablePageRoute<void>()!.canSwipe = canSwipe;
+//     });
+//   }
+
+//   @override
+//   void dispose() {
+//     _tabController.dispose();
+//     super.dispose();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: MorphingAppBar(
+//         backgroundColor: Colors.green,
+//         title: const Text('Page 3'),
+//         actions: [
+//           IconButton(
+//             key: const ValueKey('star'),
+//             icon: const Icon(Icons.star),
+//             onPressed: () {},
+//           ),
+//           IconButton(
+//             key: const ValueKey('play_arrow'),
+//             icon: const Icon(Icons.play_arrow),
+//             onPressed: () {},
+//           ),
+//           IconButton(
+//             key: const ValueKey('favorite'),
+//             icon: const Icon(Icons.favorite),
+//             onPressed: () {},
+//           ),
+//           PopupMenuButton<void>(
+//             itemBuilder: (context) => [
+//               const PopupMenuItem(child: Text('One')),
+//               const PopupMenuItem(child: Text('Two')),
+//             ],
+//           ),
+//         ],
+//         bottom: TabBar(
+//           controller: _tabController,
+//           indicatorColor: Colors.white,
+//           isScrollable: true,
+//           tabs: [
+//             for (var i = 0; i < _tabCount; i++) Tab(text: 'Tab ${i + 1}'),
+//           ],
+//         ),
+//       ),
+//       body: TabBarView(
+//         controller: _tabController,
+//         children: [
+//           for (var i = 0; i < _tabCount; i++)
+//             Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 Text('This is tab ${i + 1}'),
+//                 ElevatedButton(
+//                   onPressed: () {
+//                     context.navigator.push<void>(
+//                       SwipeablePageRoute(builder: (_) => SecondPage()),
+//                     );
+//                   },
+//                   child: const Text('Open page 2'),
+//                 ),
+//               ],
+//             ),
+//         ],
+//       ),
+//     );
+//   }
+// }
